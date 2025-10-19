@@ -31,11 +31,11 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.1.3"
   },
-  "author": "derrops@derrops.net",
+  "author": "derrops@derrops.com",
   "license": "(ISC OR GPL-3.0)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/derrops-net/opensearch-ts.git"
+    "url": "https://github.com/derrickfutschik/opensearch-ts.git"
   },
   "keywords": [
     "opensearch",
