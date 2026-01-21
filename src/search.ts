@@ -1,5 +1,5 @@
 import { ShardStatistics } from "@opensearch-project/opensearch/api/_types/_common"
-import { Highlight, TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
+import { Highlight, Hit, TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
 import { RequireAtLeastOne, RequireExactlyOne } from "type-fest"
 import { AggTypeDictionaryRecursive, AggsQuery } from "./aggInput"
 import { AggTypeResponseDictionary2 } from "./aggOutput"
@@ -19,6 +19,7 @@ export type Document<T> = {
     _score: number,
     _source: T,
     sort?: any[],
+    highlight?: Highlight,
 }
 
 
@@ -28,7 +29,7 @@ export type Document<T> = {
 export type Hits<T> = {
     "total": number & TotalHits,
     "max_score": any,
-    "hits": Document<T>[]
+    "hits": (Document<T> & Hit)[]
 }
 
 export type Source<T> = {
