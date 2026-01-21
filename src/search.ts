@@ -1,5 +1,5 @@
 import { ShardStatistics } from "@opensearch-project/opensearch/api/_types/_common"
-import { TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
+import { Highlight, TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
 import { RequireAtLeastOne, RequireExactlyOne } from "type-fest"
 import { AggTypeDictionaryRecursive, AggsQuery } from "./aggInput"
 import { AggTypeResponseDictionary2 } from "./aggOutput"
@@ -204,6 +204,8 @@ export type Search<T, A extends AggsQuery> = {
 
     /** Index used for the search */
     index?: string,
+
+    highlight: Highlight
 
 }
 
