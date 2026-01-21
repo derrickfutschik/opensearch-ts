@@ -1,4 +1,5 @@
 import { Search_RequestBody } from "@opensearch-project/opensearch/api"
+import { Core_Search } from "@opensearch-project/opensearch/api/_types"
 import { ShardStatistics } from "@opensearch-project/opensearch/api/_types/_common"
 import { Highlight, TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
 import { RequireAtLeastOne, RequireExactlyOne } from "type-fest"
@@ -240,7 +241,7 @@ export type SearchResponse<T, A extends AggsQuery> = {
     "_shards": ShardStatistics,
     "hits": Hits<T>,
     "aggregations"?: { [K in keyof A]: AggTypeResponseDictionary2<T, A[K]["agg"], A[K]["aggs"]> },
-}
+} & Core_Search.ResponseBody
 
 
 /**
