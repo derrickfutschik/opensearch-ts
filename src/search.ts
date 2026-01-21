@@ -1,3 +1,4 @@
+import { Search_RequestBody } from "@opensearch-project/opensearch/api"
 import { ShardStatistics } from "@opensearch-project/opensearch/api/_types/_common"
 import { Highlight, TotalHits } from "@opensearch-project/opensearch/api/_types/_core.search"
 import { RequireAtLeastOne, RequireExactlyOne } from "type-fest"
@@ -207,7 +208,7 @@ export type Search<T, A extends AggsQuery> = {
 
     highlight?: Highlight
 
-}
+} & Omit<Search_RequestBody, "aggs">
 
 
 /**
