@@ -39,7 +39,7 @@ export class TypescriptOSProxyClient {
     }
 
     async countTs<T, A extends AggsQuery>(search: {
-        body: q.Search<T, A>,
+        body: q.SearchRequest<T, A>,
         index?: string
     }, options?: TransportRequestOptions) {
         return this.esClient.count({
@@ -53,17 +53,19 @@ export class TypescriptOSProxyClient {
     }
 
     async searchTS<T, A extends AggsQuery>(search: {
-        body: q.Search<T, A>,
+        body: q.SearchRequest<T, A> | q.Search<T, A>,
         index?: string
-    }, options?: TransportRequestOptions) {
+    }, options?: TransportRequestOptions): Promise<q.SearchResponse<T, A>> {
+        const body = search.body as q.SearchRequest<T, A> & { index?: string }
         return this.esClient.search({
-            index: search.body.index || search.index,
+            index: body.index || search.index,
             body: _.omit(search.body, IGNORE_ATTS)
         },
             options)
             .then(resp => {
-                search.body.response = resp.body as q.SearchResponse<T, A>
-                return search.body.response
+                const response = resp.body as q.SearchResponse<T, A>
+                ;(search.body as q.Search<T, A>).response = response
+                return response
             })
     }
 
@@ -84,7 +86,7 @@ export class TypescriptOSProxyClient {
     }
 
     async msearchTS<T, A extends AggsQuery>(
-        msearchTs: q.Search<T, A>[], index?: string, options?: TransportRequestOptions)
+        msearchTs: q.SearchRequest<T, A>[], index?: string, options?: TransportRequestOptions)
         : Promise<q.SearchResponse<T, A>[]> {
 
 
@@ -94,10 +96,10 @@ export class TypescriptOSProxyClient {
 
         const responses = (await this.esClient.msearch({ body: msearch, index }, options)).body.responses
         responses.forEach((resp, i) => {
-            msearchTs[i].response = resp as q.SearchResponse<T, A>
+            (msearchTs[i] as q.Search<T, A>).response = resp as q.SearchResponse<T, A>
         });
 
-        return msearchTs.map((search, i) => new ResponseParser(search).parseSearchResponse(responses[i]))
+        return msearchTs.map((search, i) => new ResponseParser(search as q.Search<T, A>).parseSearchResponse(responses[i]))
 
     }
 

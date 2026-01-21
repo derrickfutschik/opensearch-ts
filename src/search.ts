@@ -153,41 +153,20 @@ export type OSQuery<T> = {
 export type AggsExp<T, A extends AggsQuery> = { [K in keyof A]: AggTypeDictionaryRecursive<T, A[K]["agg"], A[K]["aggs"]> }
 
 /**
- * Search query with description of the aggs, as well as the response
+ * Search request without the response field (used for input parameters to avoid circular type inference)
  */
-export type Search<T, A extends AggsQuery> = {
+export type SearchRequest<T, A extends AggsQuery> = {
 
-    /** Aggs query */
     aggs?: AggsExp<T, A>,
 
     docvalue_fields?: att.AnyAttribute<T>[],
 
-
-    /** Query used for search */
     query?: OSQuery<T>,
 
-    /** Subset of attributes used for search */
     _source?: Source<T> | boolean,
 
-    indices_boost?: { [a: string]: number }[]
-
-    min_score?: number,
-    seq_no_primary_term?: boolean,
-    terminate_after?: number,
-
-
-    /** Number of documents to return in search */
-    size?: number,
-
-    stats?: string[],
-
-    track_total_hits?: boolean,
-    version?: boolean,
-    explain?: boolean,
-    from?: number,
-    timeout?: string,
     stored_fields?: att.AnyAttribute<T>[],
-    /** How to sort */
+
     sort?:
     RequireExactlyOne<{
         [key in att.AnyAttribute<T>]: {
@@ -199,46 +178,20 @@ export type Search<T, A extends AggsQuery> = {
         }
     }>[],
 
-    search_after?: any[],
-
-    /** Response which will be populated after searching */
-    response?: SearchResponse<T, A>
-
-    /** Index used for the search */
-    index?: string,
-
-    highlight?: Highlight
-
 } & Omit<Search_RequestBody, "aggs">
 
-
 /**
- * Type 'ResponseItem' is not assignable to type 'SearchResponse<T, A>'.
-  Type 'MultiSearchItem' is not assignable to type 'SearchResponse<T, A>'.
-    Types of property '"_shards"' are incompatible.
-      Type 'ShardStatistics' is not assignable to type 'ShardsHitResult'.
-        Property '"skipped"' is optional in type 'ShardStatistics' but required in type 'ShardsHitResult'.
+ * Search query with description of the aggs, as well as the response
  */
-
-
-/**
- * Details of the Shards Hit
- */
-// export type ShardsHitResult = {
-//     "total": number,
-//     "successful": number,
-//     "skipped": number,
-//     "failed": number
-// }
+export type Search<T, A extends AggsQuery> = SearchRequest<T, A> & {
+    response?: SearchResponse<T, A>
+}
 
 
 /**
  * The search response JSON
  */
 export type SearchResponse<T, A extends AggsQuery> = {
-    "took": number,
-    "timed_out": boolean,
-    "_shards": ShardStatistics,
     "hits": Hits<T>,
     "aggregations"?: { [K in keyof A]: AggTypeResponseDictionary2<T, A[K]["agg"], A[K]["aggs"]> },
 } & Core_Search.ResponseBody
