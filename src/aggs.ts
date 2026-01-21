@@ -191,6 +191,7 @@ export type TermsAgg<T> = {
     terms: fields.AnyField<T> & {
         size?: number,
         missing?: number | string | Date,
+        order?: { _count: 'desc' | 'asc' } | { _key: 'desc' | 'asc' },
     },
 
 }
