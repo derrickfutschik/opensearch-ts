@@ -205,7 +205,7 @@ export type Search<T, A extends AggsQuery> = {
     /** Index used for the search */
     index?: string,
 
-    highlight: Highlight
+    highlight?: Highlight
 
 }
 
